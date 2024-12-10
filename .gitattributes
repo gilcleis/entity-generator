@@ -1,0 +1,16 @@
+# Auto detect text files and perform LF normalization
+*         text=auto
+
+# PHP files
+*.php     text eol=lf diff=php
+*.phpt    text eol=lf diff=php
+*.phtml   text eol=lf diff=html
+*.blade.php text eol=lf diff=html
+*.md text eol=lf diff=markdown
+*.phar    binary
+
+# Configuration
+phpcs.xml    text eol=lf
+psalm.xml    text eol=lf
+composer.lock text eol=lf
+composer.json text eol=lf
