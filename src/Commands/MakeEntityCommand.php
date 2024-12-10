@@ -8,6 +8,7 @@ use Gilcleis\Support\Exceptions\EntityCreateException;
 use Gilcleis\Support\Generators\EntityGenerator;
 use Gilcleis\Support\Generators\ModelGenerator;
 use Gilcleis\Support\Generators\MigrationGenerator;
+use Gilcleis\Support\Generators\RepositoryGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Support\Arr;
@@ -35,6 +36,8 @@ class MakeEntityCommand extends Command
         {--only-api : Set this flag if you want to create resource, controller, route, requests, tests.}
         {--only-model : Set this flag if you want to create only model. This flag is a higher priority than --only-migration, --only-tests and --only-repository.} 
         {--only-migration : Set this flag if you want to create only repository. This flag is a higher priority than --only-tests.}
+        {--only-repository : Set this flag if you want to create only repository. This flag is a higher priority than --only-tests and --only-migration.}
+
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
         {--i|integer=* : Add integer field to entity.}
@@ -64,17 +67,19 @@ class MakeEntityCommand extends Command
     protected $modelGenerator;
     protected $eventDispatcher;
     protected $migrationGenerator;
+    protected $repositoryGenerator;
 
     protected $rules = [
         'only' => [
             'only-api' => [ModelGenerator::class],
             'only-model' => [ModelGenerator::class],
             'only-migration' => [MigrationGenerator::class],
+            'only-repository' => [RepositoryGenerator::class],
         ]
     ];
 
     public $generators = [
-        ModelGenerator::class,MigrationGenerator::class
+        ModelGenerator::class,MigrationGenerator::class, RepositoryGenerator::class,
     ];
 
     public function __construct()
@@ -84,6 +89,7 @@ class MakeEntityCommand extends Command
         $this->modelGenerator = app(ModelGenerator::class);
         $this->eventDispatcher = app(EventDispatcher::class);
         $this->migrationGenerator = app(MigrationGenerator::class);
+        $this->repositoryGenerator = app(RepositoryGenerator::class);
     }
 
     /**

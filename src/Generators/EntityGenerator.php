@@ -5,6 +5,7 @@ namespace Gilcleis\Support\Generators;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
+use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
 
 /**
  * @property Filesystem $fs
