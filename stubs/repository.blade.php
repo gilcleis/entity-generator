@@ -16,10 +16,10 @@ echo <<<PHPDOC
 
 PHPDOC;
 @endphp
-class {{$entity}}Repository extends BaseRepository
+class {{$entity}}Repository extends BaseRepository implements Contracts\{{$entity}}RepositoryInterface
 {
     public function __construct()
     {
-        $this->setModel({{$entity}}::class);
+        parent::__construct({{$entity}}::class);
     }
 }
