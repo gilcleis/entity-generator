@@ -6,9 +6,11 @@ use Gilcleis\Support\Events\SuccessCreateMessage;
 use Gilcleis\Support\Exceptions\ClassNotExistsException;
 use Gilcleis\Support\Exceptions\EntityCreateException;
 use Gilcleis\Support\Generators\EntityGenerator;
+use Gilcleis\Support\Generators\FactoryGenerator;
 use Gilcleis\Support\Generators\ModelGenerator;
 use Gilcleis\Support\Generators\MigrationGenerator;
 use Gilcleis\Support\Generators\RepositoryGenerator;
+use Gilcleis\Support\Generators\TestsGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Support\Arr;
@@ -37,6 +39,8 @@ class MakeEntityCommand extends Command
         {--only-model : Set this flag if you want to create only model. This flag is a higher priority than --only-migration, --only-tests and --only-repository.} 
         {--only-migration : Set this flag if you want to create only repository. This flag is a higher priority than --only-tests.}
         {--only-repository : Set this flag if you want to create only repository. This flag is a higher priority than --only-tests and --only-migration.}
+        {--only-tests : Set this flag if you want to create only tests.}
+        {--only-factory : Set this flag if you want to create only factory.}
 
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
@@ -68,6 +72,9 @@ class MakeEntityCommand extends Command
     protected $eventDispatcher;
     protected $migrationGenerator;
     protected $repositoryGenerator;
+    protected $testGenerator;
+    protected $factoryGenerator;
+    
 
     protected $rules = [
         'only' => [
@@ -75,11 +82,17 @@ class MakeEntityCommand extends Command
             'only-model' => [ModelGenerator::class],
             'only-migration' => [MigrationGenerator::class],
             'only-repository' => [RepositoryGenerator::class],
+            'only-factory' => [FactoryGenerator::class],
+            'only-tests' => [FactoryGenerator::class, TestsGenerator::class],
         ]
     ];
 
     public $generators = [
-        ModelGenerator::class,MigrationGenerator::class, RepositoryGenerator::class,
+        ModelGenerator::class,
+        MigrationGenerator::class, 
+        RepositoryGenerator::class,
+        TestsGenerator::class,
+        FactoryGenerator::class,
     ];
 
     public function __construct()
@@ -90,6 +103,8 @@ class MakeEntityCommand extends Command
         $this->eventDispatcher = app(EventDispatcher::class);
         $this->migrationGenerator = app(MigrationGenerator::class);
         $this->repositoryGenerator = app(RepositoryGenerator::class);
+        $this->factoryGenerator = app(FactoryGenerator::class);
+        $this->testGenerator = app(TestsGenerator::class);
     }
 
     /**

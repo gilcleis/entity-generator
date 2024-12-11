@@ -1,5 +1,6 @@
 namespace Gilcleis\Support\Traits;
 
+use App\Traits\ModelTrait;
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
 use BadMethodCallException;

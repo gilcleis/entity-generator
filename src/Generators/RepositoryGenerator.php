@@ -35,17 +35,17 @@ class RepositoryGenerator extends EntityGenerator
         $this->saveClass('repositories', "{$this->model}Repository", $repositoryContent);
         event(new SuccessCreateMessage("Created a new Repository: {$this->model}Repository"));
 
-        // if ($this->classExists('repositories', 'BaseRepository')) {
-        //     event(new SuccessCreateMessage("BaseRepository already exists"));
-        // } else {
-        //     $repositoryContent = $this->getStub('base_repository', [
-        //         'namespace' => $this->getOrCreateNamespace('repositories'),
-        //     ]);
+        if ($this->classExists('repositories', 'BaseRepository')) {
+            event(new SuccessCreateMessage("BaseRepository already exists"));
+        } else {
+            $repositoryContent = $this->getStub('base_repository', [
+                'namespace' => $this->getOrCreateNamespace('repositories'),
+            ]);
 
-        //     $this->saveClass('base_repository', "BaseRepository", $repositoryContent);
+            $this->saveClass('base_repository', "BaseRepository", $repositoryContent);
 
-        //     event(new SuccessCreateMessage("Created BaseRepository"));
-        // }
+            event(new SuccessCreateMessage("Created BaseRepository"));
+        }
 
         if ($this->classExists('contracts', "{$this->model}RepositoryInterface")) {
             event(new SuccessCreateMessage("{$this->model}RepositoryInterface already exists"));

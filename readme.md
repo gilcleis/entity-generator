@@ -14,7 +14,7 @@ We're highly recommending to install package for only dev environment
 And publish.
 
 ```bash
-    php artisan vendor:publish --provider="RonasIT\Support\EntityGeneratorServiceProvider"
+    php artisan vendor:publish --provider="Gilcleis\Support\EntityGeneratorServiceProvider"
 ```
 
 ### Examples
