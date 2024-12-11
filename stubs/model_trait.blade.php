@@ -1,4 +1,4 @@
-namespace RonasIT\Support\Traits;
+namespace Gilcleis\Support\Traits;
 
 use Illuminate\Support\Facades\Schema;
 use Illuminate\Support\Str;
