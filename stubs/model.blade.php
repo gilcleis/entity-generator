@@ -1,5 +1,6 @@
 namespace {{$namespace}};
 
+use Gilcleis\Support\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
@@ -10,7 +11,7 @@ use Illuminate\Database\Eloquent\Model;
 */
 class {{$entity}} extends Model
 {
-    use HasFactory;
+    use HasFactory,ModelTrait;
 
     protected $table = '{{\Illuminate\Support\Str::plural(\Illuminate\Support\Str::snake($entity))}}';
 
