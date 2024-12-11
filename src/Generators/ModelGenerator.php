@@ -17,20 +17,32 @@ class ModelGenerator extends EntityGenerator
 
     public function generate(): void
     {
-        if ($this->classExists('models', $this->model)) {
-            $this->throwFailureException(
-                ClassAlreadyExistsException::class,
-                "Cannot create {$this->model} Model cause {$this->model} Model already exists.",
-                "Remove {$this->model} Model."
-            );
+        // if ($this->classExists('models', $this->model)) {
+        //     $this->throwFailureException(
+        //         ClassAlreadyExistsException::class,
+        //         "Cannot create {$this->model} Model cause {$this->model} Model already exists.",
+        //         "Remove {$this->model} Model."
+        //     );
+        // }
+
+        // $this->prepareRelatedModels();
+        // $modelContent = $this->getNewModelContent();
+
+        // $this->saveClass('models', $this->model, $modelContent);
+
+        // event(new SuccessCreateMessage("Created a new Model: {$this->model}"));
+
+        if ($this->classExists('traits', 'ModelTrait')) {
+            event(new SuccessCreateMessage("ModelTrait already exists"));
+        } else {
+            $ModelTraitContent = $this->getStub('model_trait', [
+               // 'namespace' => $this->getOrCreateNamespace('traits'),
+            ]);
+
+            $this->saveClass('traits', "ModelTrait", $ModelTraitContent);
+
+            event(new SuccessCreateMessage("Created BaseRepository"));
         }
-
-        $this->prepareRelatedModels();
-        $modelContent = $this->getNewModelContent();
-
-        $this->saveClass('models', $this->model, $modelContent);
-
-        event(new SuccessCreateMessage("Created a new Model: {$this->model}"));
     }
 
     protected function getNewModelContent(): string
