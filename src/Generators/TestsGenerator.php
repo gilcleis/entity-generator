@@ -11,7 +11,7 @@ class TestsGenerator extends EntityGenerator
     {
         return "{$this->model}Test";
     }
-  
+
     protected bool $withAuth = false;
 
     public function generate(): void
@@ -49,6 +49,24 @@ class TestsGenerator extends EntityGenerator
         $this->saveClass('tests_repositories', "{$this->model}RepositoryTest", $content);
 
         event(new SuccessCreateMessage($createMessage));
+
+        
+
+        $content = $this->getStub('test_model', [
+            'entity' => $this->model,
+            'databaseTableName' => $this->getTableName($this->model),
+            'entities' => $this->getTableName($this->model, '-'),
+            'withAuth' => $this->withAuth,
+            'modelsNamespace' => $this->getOrCreateNamespace('models'),
+            'fields' => $this->prepareFields()
+
+        ]);
+
+        $createMessage = "Created a new Test: {$this->model}ModelTest";
+
+        $this->saveClass('tests_models', "{$this->model}ModelTest", $content);
+
+        event(new SuccessCreateMessage($createMessage));
     }
 
     protected function prepareFields(): array
@@ -62,7 +80,7 @@ class TestsGenerator extends EntityGenerator
                 $result[] = [
                     'name' => $field,
                     'type' => head($explodedType),
-                    'condition' => isset($explodedType[1])?$explodedType[1]:'required',
+                    'condition' => isset($explodedType[1]) ? $explodedType[1] : 'required',
                 ];
             }
         }
