@@ -13,6 +13,7 @@ return [
         'tests' => 'tests/Feature',
         'services' => 'app/Services',
         'resources' => 'app/Http/Resources',
+        'requests' => 'app/Http/Requests',
     ],
     'stubs' => [
         'model' => 'entity-generator::model',
@@ -27,6 +28,7 @@ return [
         'test_model' => 'entity-generator::test_model',
         'service' => 'entity-generator::service',
         'resource' => 'entity-generator::resource',
+        'request' => 'entity-generator::request',
     ],
     'items_per_page' => 12,
     'max_size_string' => 60,
