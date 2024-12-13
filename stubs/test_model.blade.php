@@ -29,7 +29,7 @@ class {{$entity}}ModelTest extends TestCase
     /** @test */
     public function getPerPage(): void
     {
-        $this->assertEquals({{config('entity-generator.max_size_string', 50)}}, $this->{{\Illuminate\Support\Str::snake($entity)}}->getPerPage());
+        $this->assertEquals({{config('entity-generator.items_per_page', 50)}}, $this->{{\Illuminate\Support\Str::snake($entity)}}->getPerPage());
     }
 
     /** @test */
@@ -57,14 +57,27 @@ class {{$entity}}ModelTest extends TestCase
 @foreach($fields as $field)
             '{{$field['name']}}',
 @endforeach
-        ], $this->campaign->getFillable());
+        ], $this->{{\Illuminate\Support\Str::snake($entity)}}->getFillable());
     }
 
     /** @test */
     public function hidden(): void
     {
         $this->assertEquals([
+            'pivot'
         ], $this->{{\Illuminate\Support\Str::snake($entity)}}->getHidden());
+    }
+
+    /** @test */
+    public function CastsAttribute(): void
+    {
+        $casts = [
+        'id' => 'int',
+@foreach($casts as $fieldName => $cast)
+        '{{$fieldName}}' => '{{$cast}}',
+@endforeach
+        ];
+        $this->assertEquals($casts, $this->{{\Illuminate\Support\Str::snake($entity)}}->getCasts());
     }
 
 }

@@ -58,6 +58,7 @@ class TestsGenerator extends EntityGenerator
             'entities' => $this->getTableName($this->model, '-'),
             'withAuth' => $this->withAuth,
             'modelsNamespace' => $this->getOrCreateNamespace('models'),
+            'casts' => $this->getCasts($this->fields),
             'fields' => $this->prepareFields()
 
         ]);
@@ -65,6 +66,23 @@ class TestsGenerator extends EntityGenerator
         $createMessage = "Created a new Test: {$this->model}ModelTest";
 
         $this->saveClass('tests_models', "{$this->model}ModelTest", $content);
+
+        event(new SuccessCreateMessage($createMessage));
+
+        $content = $this->getStub('test_service', [
+            'entity' => $this->model,
+            'databaseTableName' => $this->getTableName($this->model),
+            'entities' => $this->getTableName($this->model, '-'),
+            'withAuth' => $this->withAuth,
+            'modelsNamespace' => $this->getOrCreateNamespace('models'),
+            'casts' => $this->getCasts($this->fields),
+            'fields' => $this->prepareFields()
+
+        ]);
+
+        $createMessage = "Created a new Test: {$this->model}ServiceTest";
+
+        $this->saveClass('tests_services', "{$this->model}ServiceTest", $content);
 
         event(new SuccessCreateMessage($createMessage));
     }

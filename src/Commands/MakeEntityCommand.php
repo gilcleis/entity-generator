@@ -11,6 +11,8 @@ use Gilcleis\Support\Generators\ModelGenerator;
 use Gilcleis\Support\Generators\MigrationGenerator;
 use Gilcleis\Support\Generators\RepositoryGenerator;
 use Gilcleis\Support\Generators\TestsGenerator;
+use Gilcleis\Support\Generators\ServiceGenerator;
+use Gilcleis\Support\Generators\ResourceGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Support\Arr;
@@ -21,6 +23,12 @@ use UnexpectedValueException;
 /**
  * @property ModelGenerator $modelGenerator
  * @property EventDispatcher $eventDispatcher
+ * @property MigrationGenerator $eventDispatcher
+ * @property RepositoryGenerator $eventDispatcher
+ * @property FactoryGenerator $eventDispatcher
+ * @property TestsGenerator $eventDispatcher
+ * @property ServiceGenerator $eventDispatcher
+ * @property ResourceGenerator $eventDispatcher
   */
 class MakeEntityCommand extends Command
 {
@@ -41,6 +49,8 @@ class MakeEntityCommand extends Command
         {--only-repository : Set this flag if you want to create only repository. This flag is a higher priority than --only-tests and --only-migration.}
         {--only-tests : Set this flag if you want to create only tests.}
         {--only-factory : Set this flag if you want to create only factory.}
+        {--only-service : Set this flag if you want to create only service.}
+        {--only-resource : Set this flag if you want to create only resource.}
 
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
@@ -74,6 +84,8 @@ class MakeEntityCommand extends Command
     protected $repositoryGenerator;
     protected $testGenerator;
     protected $factoryGenerator;
+    protected $serviceGenerator;
+    protected $resourceGenerator;
     
 
     protected $rules = [
@@ -84,6 +96,8 @@ class MakeEntityCommand extends Command
             'only-repository' => [RepositoryGenerator::class],
             'only-factory' => [FactoryGenerator::class],
             'only-tests' => [FactoryGenerator::class, TestsGenerator::class],
+            'only-service' => [ServiceGenerator::class],
+            'only-resource' => [ResourceGenerator::class],
         ]
     ];
 
@@ -93,6 +107,8 @@ class MakeEntityCommand extends Command
         RepositoryGenerator::class,
         TestsGenerator::class,
         FactoryGenerator::class,
+        ServiceGenerator::class,
+        ResourceGenerator::class,
     ];
 
     public function __construct()
@@ -105,6 +121,8 @@ class MakeEntityCommand extends Command
         $this->repositoryGenerator = app(RepositoryGenerator::class);
         $this->factoryGenerator = app(FactoryGenerator::class);
         $this->testGenerator = app(TestsGenerator::class);
+        $this->serviceGenerator = app(ServiceGenerator::class);
+        $this->resourceGenerator = app(ResourceGenerator::class);
     }
 
     /**

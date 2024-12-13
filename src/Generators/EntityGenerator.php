@@ -159,4 +159,29 @@ abstract class EntityGenerator
     {
         throw new $exceptionClass("{$failureMessage} {$recommendedMessage}");
     }
+
+    protected function getCasts($fields): array
+    {
+        $casts = [
+            'boolean-required' => 'boolean',
+            'boolean' => 'boolean',
+            'json' => 'array',
+            'integer' => 'integer',
+            'integer-required' => 'integer',
+        ];
+
+        $result = [];
+
+        foreach ($fields as $fieldType => $names) {
+            if (empty($casts[$fieldType])) {
+                continue;
+            }
+
+            foreach ($names as $name) {
+                $result[$name] = $casts[$fieldType];
+            }
+        }
+
+        return $result;
+    }
 }

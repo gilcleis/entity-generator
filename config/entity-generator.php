@@ -11,6 +11,8 @@ return [
         'contracts' => 'app/Repositories/Contracts',
         'factory' => 'database/factories',
         'tests' => 'tests/Feature',
+        'services' => 'app/Services',
+        'resources' => 'app/Http/Resources',
     ],
     'stubs' => [
         'model' => 'entity-generator::model',
@@ -23,6 +25,8 @@ return [
         'test' => 'entity-generator::test',
         'test_repository' => 'entity-generator::test_repository',
         'test_model' => 'entity-generator::test_model',
+        'service' => 'entity-generator::service',
+        'resource' => 'entity-generator::resource',
     ],
     'items_per_page' => 12,
     'max_size_string' => 60,
