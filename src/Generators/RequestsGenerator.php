@@ -61,7 +61,6 @@ class RequestsGenerator extends EntityGenerator
 
         $content = $this->getStub('request', [
             'data' => $data,
-            'method' => $method,
             'entity' => $modelName,
             'needToValidate' => true,
             // 'requestsFolder' => $requestsFolder,
@@ -72,8 +71,7 @@ class RequestsGenerator extends EntityGenerator
         $this->saveClass(
             'requests',
             "{$modelName}Request",
-            $content,
-            $requestsFolder
+            $content
         );
 
         event(new SuccessCreateMessage("Created a new Request: {$method}{$modelName}Request"));

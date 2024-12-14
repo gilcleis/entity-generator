@@ -17,11 +17,11 @@ class {{$entity}}Controller extends Controller
     }
 
 @if (in_array('C', $options))
-    public function create({{$entity}}Request $request)
+    public function store({{$entity}}Request $request)
     {
         $data = $request->validated();
         $result = $this->service->create($data);
-        $response =  {{$entity}}Resource::make($result);
+        $response =  new {{$entity}}Resource($result);
 
         return response()->json(['message' => trans('validation.message.record_inserted_successfully'),'data' => $response], Response::HTTP_CREATED);
     }
@@ -38,6 +38,15 @@ class {{$entity}}Controller extends Controller
         return response()->json(new {{$entity}}Resource($result), Response::HTTP_OK);
     }    
 
+    public function index({{$entity}}Request $request): JsonResponse
+    {
+        $result = $this->service
+            ->with($request->input('with', []))
+            ->withCount($request->input('with_count', []))
+            ->all();
+        return response()->json(new {{$entity}}Collection($result), Response::HTTP_OK);
+    }    
+
 {{--    public function search(Search{{$str::plural($entity)}}Request $request)
     {
         $result = $this->service->search($request->validated());
@@ -50,7 +59,7 @@ class {{$entity}}Controller extends Controller
     public function update({{$entity}}Request $request, $id)
     {
         $this->service->update($id, $request->validated());
-        $response = {{$entity}}Resource::make($this->service->find($id));
+        $response = new {{$entity}}Resource($this->service->find($id));
 
         return response()->json(['message' => trans('validation.message.record_updated_successfully'),'data' => $response], Response::HTTP_OK);        
     }

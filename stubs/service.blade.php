@@ -40,17 +40,13 @@ class {{$entity}}Service
     }
 @endif  
 @if (in_array('D', $options))
-    public function delete(int $id): int
+    public function delete(array|int $id): int
     {
-        $where = ['id' => $id];
-
         return $this->repository->delete($where);
     }
 
-    public function restore(int $id): int
+    public function restore(array|int $id): int
     {
-        $where = ['id' => $id];
-
         return $this->repository->restore($where);
     }
 @endif   

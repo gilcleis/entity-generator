@@ -9,7 +9,7 @@ use Illuminate\Contracts\Validation\Validator;
 use Illuminate\Foundation\Http\FormRequest;
 
 @endif
-class {{$method}}{{$entity}}Request extends FormRequest
+class {{$entity}}Request extends FormRequest
 {
     public function authorize()
     {
