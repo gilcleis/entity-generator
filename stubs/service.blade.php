@@ -20,7 +20,8 @@ PHPDOC;
 class {{$entity}}Service 
 {
     public function __construct(
-        private {{$entity}}RepositoryInterface $repository
+        //private {{$entity}}RepositoryInterface $repository
+        private {{$entity}}Repository $repository
     ) {        
     }
 
@@ -70,7 +71,7 @@ class {{$entity}}Service
      * @param array $where An associative array of field => value pairs to match against.
      * @return bool 
      */
-    public function exists(array $where): bool
+    public function exists(array|int $where): bool
     {
         return $this->repository->exists($where);
     }
@@ -121,6 +122,16 @@ class {{$entity}}Service
     public function onlyTrashed($field, $value)
     {
         return $this->repository->onlyTrashed($field, $value);
+    }
+
+    public function with($relation)
+    {
+        return $this->repository->with($relation);
+    }
+
+    public function withCount($relation)
+    {
+        return $this->repository->withCount($relation);
     }
 @endif
 }

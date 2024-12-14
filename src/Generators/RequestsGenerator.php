@@ -2,9 +2,9 @@
 
 namespace Gilcleis\Support\Generators;
 
+use Gilcleis\Support\Events\SuccessCreateMessage;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Gilcleis\Support\Events\SuccessCreateMessage;
 
 class RequestsGenerator extends EntityGenerator
 {
@@ -27,58 +27,51 @@ class RequestsGenerator extends EntityGenerator
 
     public function generate(): void
     {
+        $data = [];
         if (in_array('R', $this->crudOptions)) {
-            $this->createRequest(
-                self::GET_METHOD,
-                true,
-                $this->getGetValidationParameters()
-            );
-            $this->createRequest(
-                self::SEARCH_METHOD,
-                false,
-                $this->getSearchValidationParameters()
-            );
+            // $this->createRequest(
+            //     self::GET_METHOD,
+            //     true,
+            //     $this->getGetValidationParameters()
+            // );
+            $data[] = ['method' => self::GET_METHOD, 'needToValidate' => true, 'parameters' => $this->getGetValidationParameters()];
+            //$data[] = ['method' => self::SEARCH_METHOD, 'needToValidate' => false, 'parameters' => $this->getSearchValidationParameters()];
         }
 
         if (in_array('D', $this->crudOptions)) {
-            $this->createRequest(self::DELETE_METHOD);
+            $data[] = ['method' => self::DELETE_METHOD, 'needToValidate' => true, 'parameters' => []];
         }
 
         if (in_array('C', $this->crudOptions)) {
-            $this->createRequest(
-                self::CREATE_METHOD,
-                false,
-                $this->getCreateValidationParameters()
-            );
+            $data[] = ['method' => self::CREATE_METHOD, 'needToValidate' => false, 'parameters' => $this->getCreateValidationParameters()];
         }
 
-        if (in_array('U', $this->crudOptions)) {
-            $this->createRequest(
-                self::UPDATE_METHOD,
-                true,
-                $this->getUpdateValidationParameters()
-            );
+        if (in_array('U', $this->crudOptions)) {   
+            $data[] = ['method' => self::UPDATE_METHOD, 'needToValidate' => true, 'parameters' => $this->getUpdateValidationParameters()];
         }
+
+        $this->createRequest($data);
     }
 
-    protected function createRequest($method, $needToValidate = true, $parameters = []): void
+    protected function createRequest($data): void
     {
+        $method ='Delete';
         $requestsFolder = $this->getPluralName($this->model);
-        $modelName = $this->getEntityName($method);
+        $modelName = $this->getEntityName( $method);
 
         $content = $this->getStub('request', [
+            'data' => $data,
             'method' => $method,
             'entity' => $modelName,
-            'parameters' => $parameters,
-            'needToValidate' => $needToValidate,
-            'requestsFolder' => $requestsFolder,
+            'needToValidate' => true,
+            // 'requestsFolder' => $requestsFolder,
             'namespace' => $this->getOrCreateNamespace('requests'),
             'servicesNamespace' => $this->getOrCreateNamespace('services')
         ]);
 
         $this->saveClass(
             'requests',
-            "{$method}{$modelName}Request",
+            "{$modelName}Request",
             $content,
             $requestsFolder
         );
@@ -140,7 +133,6 @@ class RequestsGenerator extends EntityGenerator
             'with.*',
         ]);
 
-
         return $this->getValidationParameters($parameters, false);
     }
 
@@ -198,7 +190,7 @@ class RequestsGenerator extends EntityGenerator
         }
 
         if ($type == 'string') {
-            $rules[] = 'max:'.config('entity-generator.max_size_string', 50);
+            $rules[] = 'max:' . config('entity-generator.max_size_string', 50);
         }
 
         return [

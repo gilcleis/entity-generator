@@ -14,6 +14,7 @@ use Gilcleis\Support\Generators\TestsGenerator;
 use Gilcleis\Support\Generators\ServiceGenerator;
 use Gilcleis\Support\Generators\ResourceGenerator;
 use Gilcleis\Support\Generators\RequestsGenerator;
+use Gilcleis\Support\Generators\ControllerGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Support\Arr;
@@ -31,6 +32,7 @@ use UnexpectedValueException;
  * @property ServiceGenerator $serviceGenerator
  * @property ResourceGenerator $resourceGenerator
  * @property RequestsGenerator $sequestsGenerator
+ * @property ControllerGenerator $controllerGenerator
   */
 class MakeEntityCommand extends Command
 {
@@ -54,6 +56,7 @@ class MakeEntityCommand extends Command
         {--only-service : Set this flag if you want to create only service.}
         {--only-resource : Set this flag if you want to create only resource.}
         {--only-requests : Set this flag if you want to create only requests.}
+        {--only-controller : Set this flag if you want to create only controller.}
 
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
@@ -89,7 +92,8 @@ class MakeEntityCommand extends Command
     protected $factoryGenerator;
     protected $serviceGenerator;
     protected $resourceGenerator;
-    protected $requestsGenerator;    
+    protected $requestsGenerator;  
+    protected $controllerGenerator;  
 
     protected $rules = [
         'only' => [
@@ -102,6 +106,7 @@ class MakeEntityCommand extends Command
             'only-service' => [ServiceGenerator::class],
             'only-resource' => [ResourceGenerator::class],
             'only-requests' => [RequestsGenerator::class],
+            'only-controller' => [ControllerGenerator::class],
         ]
     ];
 
@@ -114,6 +119,7 @@ class MakeEntityCommand extends Command
         ServiceGenerator::class,
         ResourceGenerator::class,
         RequestsGenerator::class,
+        ControllerGenerator::class,
     ];
 
     public function __construct()
@@ -129,6 +135,7 @@ class MakeEntityCommand extends Command
         $this->serviceGenerator = app(ServiceGenerator::class);
         $this->resourceGenerator = app(ResourceGenerator::class);
         $this->requestsGenerator = app(RequestsGenerator::class);
+        $this->controllerGenerator = app(ControllerGenerator::class);
     }
 
     /**

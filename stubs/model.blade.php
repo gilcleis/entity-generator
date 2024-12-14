@@ -1,6 +1,6 @@
 namespace {{$namespace}};
 
-use Gilcleis\Support\Traits\ModelTrait;
+use App\Traits\ModelTrait;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 

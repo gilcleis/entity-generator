@@ -39,7 +39,11 @@ class {{$entity}}Resource extends JsonResource
 function addForeignKey($relation)
 {        
     $field = Str::snake($relation);
-return "\$data['{$field}'] = ['id' => \$this->{$field}->id,'name' => \$this->{$field}->name];";
+return "
+        if(\$this->resource->getRelations()['user']){
+            \$data['{$field}'] = ['id' => \$this->{$field}->id,'name' => \$this->{$field}->name];
+        }
+";
     return "isset(\$this->resource->getRelations()['{$field}'] ) ? ['{$field}' => ['id' => \$this->{$field}->id,'name' => \$this->{$field}->name]] : [])";
 }
 @endphp

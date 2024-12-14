@@ -14,6 +14,9 @@ return [
         'services' => 'app/Services',
         'resources' => 'app/Http/Resources',
         'requests' => 'app/Http/Requests',
+        'controllers' => 'app/Http/Controllers/Api',
+        'routes' => 'routes/api.php',
+        'use_routes' => 'entity-generator::use_routes',
     ],
     'stubs' => [
         'model' => 'entity-generator::model',
@@ -29,6 +32,8 @@ return [
         'service' => 'entity-generator::service',
         'resource' => 'entity-generator::resource',
         'request' => 'entity-generator::request',
+        'controller' => 'entity-generator::controller',
+        'routes' => 'entity-generator::routes',
     ],
     'items_per_page' => 12,
     'max_size_string' => 60,
