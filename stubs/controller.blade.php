@@ -1,7 +1,7 @@
 namespace {{$namespace}};
 
 @inject('str', 'Illuminate\Support\Str')
-use {{$resourcesNamespace}}\{{$str::plural($entity)}}CollectionResource;
+use {{$resourcesNamespace}}\{{$entity}}Collection;
 use {{$requestsNamespace}}\{{$entity}}Request;
 use {{$resourcesNamespace}}\{{$entity}}Resource;
 use {{$servicesNamespace}}\{{$entity}}Service;
@@ -20,8 +20,8 @@ class {{$entity}}Controller extends Controller
     /**
     * Create a new.
     *
-    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the {{{$str::lower($entity)}}  data.
-    * @return \Illuminate\Http\JsonResponse The created {{$str::lower($entity)}}  resource.
+    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the {{$str::lower($entity)}} data.
+    * @return \Illuminate\Http\JsonResponse The created {{$str::lower($entity)}} resource.
     */
     public function store({{$entity}}Request $request)
     {
@@ -38,7 +38,7 @@ class {{$entity}}Controller extends Controller
     * Get by ID.
     *
     * @param int $id The ID of the {{$str::lower($entity)}}  to retrieve.
-    * @return \Illuminate\Http\JsonResponse The {{$str::lower($entity)}}  resource.
+    * @return \Illuminate\Http\JsonResponse The {{$str::lower($entity)}} resource.
     */
     public function show({{$entity}}Request $request, $id): \Illuminate\Http\JsonResponse
     {
@@ -55,7 +55,7 @@ class {{$entity}}Controller extends Controller
     *
     * @return \Illuminate\Http\JsonResponse The collection of {{$str::lower($entity)}} resources.
     */
-    public function index({{$entity}}Request $request): JsonResponse
+    public function index({{$entity}}Request $request): \Illuminate\Http\JsonResponse
     {
         $result = $this->service
             ->with($request->input('with', []))
@@ -76,11 +76,11 @@ class {{$entity}}Controller extends Controller
     /**
     * Update by ID.
     *
-    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the updated {{$str::lower($entity)}}  data.
-    * @param int $id The ID of the {{$str::lower($entity)}}  to update.
-    * @return \Illuminate\Http\JsonResponse The updated {{$str::lower($entity)}}  resource.
+    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the updated {{$str::lower($entity)}} data.
+    * @param int $id The ID of the {{$str::lower($entity)}} to update.
+    * @return \Illuminate\Http\JsonResponse The updated {{$str::lower($entity)}} resource.
     */
-    public function update({{$entity}}Request $request, $id)
+    public function update({{$entity}}Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $this->service->update($id, $request->validated());
         $response = new {{$entity}}Resource($this->service->find($id));
@@ -96,7 +96,7 @@ class {{$entity}}Controller extends Controller
     * @param int $id The ID of the {{$str::lower($entity)}}  to delete.
     * @return \Illuminate\Http\Response A response with a 204 No Content status.
     */
-    public function delete(int $id)
+    public function delete(int $id): Response
     {
         $this->service->delete($id);
 
