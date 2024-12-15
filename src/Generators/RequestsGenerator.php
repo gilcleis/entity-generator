@@ -157,7 +157,7 @@ class RequestsGenerator extends EntityGenerator
     protected function getRules($name, $type, $required, $nullable, $present): array
     {
         $replaces = [
-            'timestamp' => 'datetime',
+            'timestamp' => 'date',
             'float' => 'numeric',
             'json' => 'array',
             'unsignedBigInteger' => 'integer'

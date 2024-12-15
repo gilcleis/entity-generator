@@ -17,6 +17,12 @@ class {{$entity}}Controller extends Controller
     }
 
 @if (in_array('C', $options))
+    /**
+    * Create a new.
+    *
+    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the {{{$str::lower($entity)}}  data.
+    * @return \Illuminate\Http\JsonResponse The created {{$str::lower($entity)}}  resource.
+    */
     public function store({{$entity}}Request $request)
     {
         $data = $request->validated();
@@ -28,6 +34,12 @@ class {{$entity}}Controller extends Controller
 
 @endif
 @if (in_array('R', $options))
+    /**
+    * Get by ID.
+    *
+    * @param int $id The ID of the {{$str::lower($entity)}}  to retrieve.
+    * @return \Illuminate\Http\JsonResponse The {{$str::lower($entity)}}  resource.
+    */
     public function show({{$entity}}Request $request, $id): \Illuminate\Http\JsonResponse
     {
         $result = $this->service
@@ -38,6 +50,11 @@ class {{$entity}}Controller extends Controller
         return response()->json(new {{$entity}}Resource($result), Response::HTTP_OK);
     }    
 
+    /**
+    * Get all.
+    *
+    * @return \Illuminate\Http\JsonResponse The collection of {{$str::lower($entity)}} resources.
+    */
     public function index({{$entity}}Request $request): JsonResponse
     {
         $result = $this->service
@@ -56,6 +73,13 @@ class {{$entity}}Controller extends Controller
 --}}
 @endif
 @if (in_array('U', $options))
+    /**
+    * Update by ID.
+    *
+    * @param \App\Http\Requests\{{$entity}}Request $request The request containing the updated {{$str::lower($entity)}}  data.
+    * @param int $id The ID of the {{$str::lower($entity)}}  to update.
+    * @return \Illuminate\Http\JsonResponse The updated {{$str::lower($entity)}}  resource.
+    */
     public function update({{$entity}}Request $request, $id)
     {
         $this->service->update($id, $request->validated());
@@ -66,6 +90,12 @@ class {{$entity}}Controller extends Controller
 
 @endif
 @if (in_array('D', $options))
+    /**
+    * Delete by ID.
+    *
+    * @param int $id The ID of the {{$str::lower($entity)}}  to delete.
+    * @return \Illuminate\Http\Response A response with a 204 No Content status.
+    */
     public function delete(int $id)
     {
         $this->service->delete($id);
