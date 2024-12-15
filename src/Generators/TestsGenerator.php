@@ -2,7 +2,6 @@
 
 namespace Gilcleis\Support\Generators;
 
-use Illuminate\Support\Arr;
 use Gilcleis\Support\Events\SuccessCreateMessage;
 
 class TestsGenerator extends EntityGenerator
@@ -50,8 +49,6 @@ class TestsGenerator extends EntityGenerator
 
         event(new SuccessCreateMessage($createMessage));
 
-        
-
         $content = $this->getStub('test_model', [
             'entity' => $this->model,
             'databaseTableName' => $this->getTableName($this->model),
@@ -85,6 +82,23 @@ class TestsGenerator extends EntityGenerator
         $this->saveClass('tests_services', "{$this->model}ServiceTest", $content);
 
         event(new SuccessCreateMessage($createMessage));
+
+        $content = $this->getStub('test_api', [
+            'entity' => $this->model,
+            'databaseTableName' => $this->getTableName($this->model),
+            'entities' => $this->getTableName($this->model, '-'),
+            'withAuth' => $this->withAuth,
+            'modelsNamespace' => $this->getOrCreateNamespace('models'),
+            'casts' => $this->getCasts($this->fields),
+            'fields' => $this->prepareFields()
+
+        ]);
+
+        $createMessage = "Created a new Test: {$this->model}ApiTest";
+
+        $this->saveClass('tests_apis', "{$this->model}ApiTest", $content);
+
+        event(new SuccessCreateMessage($createMessage));
     }
 
     protected function prepareFields(): array
@@ -98,13 +112,11 @@ class TestsGenerator extends EntityGenerator
                 $result[] = [
                     'name' => $field,
                     'type' => head($explodedType),
-                    'condition' => isset($explodedType[1]) ? $explodedType[1] : 'required',
+                    'condition' => $explodedType[1] ?? 'required',
                 ];
             }
         }
 
         return $result;
     }
-
-
 }

@@ -15,6 +15,7 @@ use Gilcleis\Support\Generators\ServiceGenerator;
 use Gilcleis\Support\Generators\ResourceGenerator;
 use Gilcleis\Support\Generators\RequestsGenerator;
 use Gilcleis\Support\Generators\ControllerGenerator;
+use Gilcleis\Support\Generators\TranslationsGenerator;
 use Illuminate\Console\Command;
 use Illuminate\Contracts\Events\Dispatcher as EventDispatcher;
 use Illuminate\Support\Arr;
@@ -33,6 +34,7 @@ use UnexpectedValueException;
  * @property ResourceGenerator $resourceGenerator
  * @property RequestsGenerator $sequestsGenerator
  * @property ControllerGenerator $controllerGenerator
+ * @property TranslationsGenerator $translationsGenerator
   */
 class MakeEntityCommand extends Command
 {
@@ -57,6 +59,7 @@ class MakeEntityCommand extends Command
         {--only-resource : Set this flag if you want to create only resource.}
         {--only-requests : Set this flag if you want to create only requests.}
         {--only-controller : Set this flag if you want to create only controller.}
+        {--only-trans : Set this flag if you want to create only translations.}
 
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
@@ -107,6 +110,7 @@ class MakeEntityCommand extends Command
             'only-resource' => [ResourceGenerator::class],
             'only-requests' => [RequestsGenerator::class],
             'only-controller' => [ControllerGenerator::class],
+            'only-trans' => [TranslationsGenerator::class],
         ]
     ];
 
@@ -120,6 +124,7 @@ class MakeEntityCommand extends Command
         ResourceGenerator::class,
         RequestsGenerator::class,
         ControllerGenerator::class,
+        TranslationsGenerator::class,
     ];
 
     public function __construct()
@@ -136,6 +141,7 @@ class MakeEntityCommand extends Command
         $this->resourceGenerator = app(ResourceGenerator::class);
         $this->requestsGenerator = app(RequestsGenerator::class);
         $this->controllerGenerator = app(ControllerGenerator::class);
+        $this->translationsGenerator = app(TranslationsGenerator::class);
     }
 
     /**
