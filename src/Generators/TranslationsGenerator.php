@@ -2,8 +2,8 @@
 
 namespace Gilcleis\Support\Generators;
 
-use Illuminate\Support\Arr;
 use Gilcleis\Support\Events\SuccessCreateMessage;
+use Illuminate\Support\Arr;
 
 class TranslationsGenerator extends EntityGenerator
 {
@@ -47,6 +47,11 @@ class TranslationsGenerator extends EntityGenerator
 
     protected function appendNotFoundException(): void
     {
+        // $this->getTranslationPath();
+        foreach (Arr::collapse($this->fields) as $field) {
+            $this->addAttribute($this->translationPath, $field, $field);
+        }
+        // $this->addAttribute($this->translationPath,'data','2021-01-01');
         $content = file_get_contents($this->translationPath);
 
         $stubPath = config('entity-generator.stubs.translation_not_found');
@@ -56,5 +61,29 @@ class TranslationsGenerator extends EntityGenerator
         $fixedContent = preg_replace('/\]\;\s*$/', "\n\t{$stubContent}", $content);
 
         file_put_contents($this->translationPath, $fixedContent);
+    }
+
+    public function addAttribute(string $filePath, string $key, string $value): bool
+    {
+        if (!\Illuminate\Support\Facades\File::exists($filePath)) {
+            return false;
+        }
+
+        $config = require $filePath;
+
+        $config['attributes'][$key] = $value;
+        $export = var_export($config, true);
+
+        $export = preg_replace([
+            '/\barray \(/',
+            '/\)(,?)$/m'
+        ], [
+            '[',
+            ']$1'
+        ], $export);
+
+        $output = "<?php\n\nreturn " . $export . ";";
+
+        return file_put_contents($filePath, $output) !== false;
     }
 }
