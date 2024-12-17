@@ -22,8 +22,12 @@ class TranslationsGenerator extends EntityGenerator
             $this->createTranslate();
         }
 
-        if ($this->isTranslationMissed('validation.exceptions.not_found')) {
-            $this->appendNotFoundException();
+        // if ($this->isTranslationMissed('validation.exceptions.not_found')) {
+        //     $this->appendNotFoundException();
+        // }
+
+        foreach (Arr::collapse($this->fields) as $field) {
+            $this->addAttribute($this->translationPath, $field, $field);
         }
     }
 
@@ -47,11 +51,7 @@ class TranslationsGenerator extends EntityGenerator
 
     protected function appendNotFoundException(): void
     {
-        // $this->getTranslationPath();
-        foreach (Arr::collapse($this->fields) as $field) {
-            $this->addAttribute($this->translationPath, $field, $field);
-        }
-        // $this->addAttribute($this->translationPath,'data','2021-01-01');
+        
         $content = file_get_contents($this->translationPath);
 
         $stubPath = config('entity-generator.stubs.translation_not_found');
@@ -70,6 +70,10 @@ class TranslationsGenerator extends EntityGenerator
         }
 
         $config = require $filePath;
+
+        if (isset($config['attributes'][$key])) {
+            return true;
+        }
 
         $config['attributes'][$key] = $value;
         $export = var_export($config, true);

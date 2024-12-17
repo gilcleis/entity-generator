@@ -23,6 +23,7 @@ class {{$entity}}Test extends TestCase
     public function setUp() : void
     {
         parent::setUp();
+        $this->user = User::factory(1)->createOne();
 @if ($withAuth)
         $this->user = User::factory(1)->createOne();
 @endif

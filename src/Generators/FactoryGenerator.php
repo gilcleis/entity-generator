@@ -19,7 +19,7 @@ class FactoryGenerator extends EntityGenerator
         'boolean' => 'boolean',
         'string' => 'word',
         'float' => 'randomFloat(2, 0, 10000)',
-        'timestamp' => 'dateTime',
+        'timestamp' => 'dateTime->format(\'Y-m-d H:i:s\')',
     ];
 
     const array CUSTOM_METHODS = [

@@ -31,6 +31,7 @@ class {{$entity}}Request extends FormRequest
         if (in_array($this->method(), ['PUT', 'PATCH'])) {
             return $this->rulesUpdate();
         }
+        return [];
 @endif
 @endforeach
     }
