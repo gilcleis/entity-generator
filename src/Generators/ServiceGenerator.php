@@ -2,10 +2,10 @@
 
 namespace Gilcleis\Support\Generators;
 
+use Gilcleis\Support\Events\SuccessCreateMessage;
+use Gilcleis\Support\Exceptions\ClassNotExistsException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Gilcleis\Support\Exceptions\ClassNotExistsException;
-use Gilcleis\Support\Events\SuccessCreateMessage;
 
 class ServiceGenerator extends EntityGenerator
 {
@@ -22,20 +22,20 @@ class ServiceGenerator extends EntityGenerator
 
     public function generate(): void
     {
-        if ($this->classExists('repositories', "{$this->model}Repository")) {
-            $stub = 'service';
-        } else {
-            $stub = 'service_with_trait';
-
-            if (!$this->classExists('models', $this->model)) {
-                $this->throwFailureException(
-                    ClassNotExistsException::class,
-                    "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
-                    "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
-                );
-            }
+        if (!$this->classExists('repositories', "{$this->model}Repository")) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model} Repository cause {$this->model} Repository does not exists.",
+                "Create a {$this->model} Repository by himself or run command 'php artisan make:entity {$this->model} --only-repository'."
+            );
         }
 
+        if ($this->classExists('services', "{$this->model}Service")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Service cause {$this->model} Service already exists."));
+
+            return;
+        }
+        $stub = 'service';
         $serviceContent = $this->getStub($stub, [
             'entity' => $this->model,
             'fields' => $this->getFields(),
