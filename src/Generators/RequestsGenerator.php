@@ -27,6 +27,11 @@ class RequestsGenerator extends EntityGenerator
 
     public function generate(): void
     {
+        if ($this->classExists('requests', "{$this->model}Request")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} FormRequest cause {$this->model} Request already exists."));
+
+            return;
+        }
         $data = [];
         if (in_array('R', $this->crudOptions)) {
             // $this->createRequest(
@@ -46,7 +51,7 @@ class RequestsGenerator extends EntityGenerator
             $data[] = ['method' => self::CREATE_METHOD, 'needToValidate' => false, 'parameters' => $this->getCreateValidationParameters()];
         }
 
-        if (in_array('U', $this->crudOptions)) {   
+        if (in_array('U', $this->crudOptions)) {
             $data[] = ['method' => self::UPDATE_METHOD, 'needToValidate' => true, 'parameters' => $this->getUpdateValidationParameters()];
         }
 
@@ -55,9 +60,9 @@ class RequestsGenerator extends EntityGenerator
 
     protected function createRequest($data): void
     {
-        $method ='Delete';
+        $method = 'Delete';
         $requestsFolder = $this->getPluralName($this->model);
-        $modelName = $this->getEntityName( $method);
+        $modelName = $this->getEntityName($method);
 
         $content = $this->getStub('request', [
             'data' => $data,

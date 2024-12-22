@@ -2,9 +2,8 @@
 
 namespace Gilcleis\Support\Generators;
 
-use Illuminate\Support\Arr;
 use Gilcleis\Support\Events\SuccessCreateMessage;
-use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
+use Illuminate\Support\Arr;
 
 class ResourceGenerator extends EntityGenerator
 {
@@ -18,13 +17,11 @@ class ResourceGenerator extends EntityGenerator
     {
         $pluralName = $this->getPluralName($this->model);
 
-        // if ($this->classExists('resources', "{$pluralName}CollectionResource")) {
-        //     $this->throwFailureException(
-        //         ClassAlreadyExistsException::class,
-        //         "Cannot create {$pluralName}CollectionResource cause {$pluralName}CollectionResource already exists.",
-        //         "Remove {$pluralName}CollectionResource."
-        //     );
-        // }
+        if ($this->classExists('resources', "{$this->model}Collection")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Collection cause {$this->model}Collection already exists."));
+
+            return;
+        }
 
         $collectionResourceContent = $this->getStub('collection_resource', [
             'singular_name' => $this->model,
@@ -39,13 +36,12 @@ class ResourceGenerator extends EntityGenerator
 
     public function generateResource(): void
     {
-        // if ($this->classExists('resources', "{$this->model}Resource")) {
-        //     $this->throwFailureException(
-        //         ClassAlreadyExistsException::class,
-        //         "Cannot create {$this->model}Resource cause {$this->model}Resource already exists.",
-        //         "Remove {$this->model}Resource."
-        //     );
-        // }
+        if ($this->classExists('resources', "{$this->model}Resource")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Resource cause {$this->model}Resource already exists."));
+
+            return;
+        }
+
         $resourceContent = $this->getStub('resource', [
             'entity' => $this->model,
             'namespace' => $this->getOrCreateNamespace('resources'),
@@ -57,5 +53,4 @@ class ResourceGenerator extends EntityGenerator
 
         event(new SuccessCreateMessage("Created a new Resource: {$this->model}Resource"));
     }
-
 }
