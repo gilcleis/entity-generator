@@ -2,11 +2,10 @@
 
 namespace Gilcleis\Support\Generators;
 
+use Gilcleis\Support\Events\SuccessCreateMessage;
+use Gilcleis\Support\Exceptions\ClassNotExistsException;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
-use Gilcleis\Support\Exceptions\ClassNotExistsException;
-use Gilcleis\Support\Events\SuccessCreateMessage;
 
 class ModelGenerator extends EntityGenerator
 {
@@ -18,11 +17,13 @@ class ModelGenerator extends EntityGenerator
     public function generate(): void
     {
         if ($this->classExists('models', $this->model)) {
-            $this->throwFailureException(
-                ClassAlreadyExistsException::class,
-                "Cannot create {$this->model} Model cause {$this->model} Model already exists.",
-                "Remove {$this->model} Model."
+            event(
+                new SuccessCreateMessage(
+                    "Cannot create {$this->model} Model cause {$this->model} Model already exists."
+                )
             );
+
+            return;
         }
 
         $this->prepareRelatedModels();
@@ -36,7 +37,7 @@ class ModelGenerator extends EntityGenerator
             event(new SuccessCreateMessage("ModelTrait already exists"));
         } else {
             $ModelTraitContent = $this->getStub('model_trait', [
-               // 'namespace' => $this->getOrCreateNamespace('traits'),
+                // 'namespace' => $this->getOrCreateNamespace('traits'),
             ]);
 
             $this->saveClass('traits', "ModelTrait", $ModelTraitContent);
