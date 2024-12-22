@@ -3,6 +3,7 @@
 namespace Gilcleis\Support\Generators;
 
 use Gilcleis\Support\Events\SuccessCreateMessage;
+use Gilcleis\Support\Exceptions\ClassNotExistsException;
 
 class TestsGenerator extends EntityGenerator
 {
@@ -15,22 +16,18 @@ class TestsGenerator extends EntityGenerator
 
     public function generate(): void
     {
-        // $content = $this->getStub('test', [
-        //     'entity' => $this->model,
-        //     'databaseTableName' => $this->getTableName($this->model),
-        //     'entities' => $this->getTableName($this->model, '-'),
-        //     'withAuth' => $this->withAuth,
-        //     'modelsNamespace' => $this->getOrCreateNamespace('models'),
-        //     'fields' => $this->prepareFields()
+        if ($this->classExists('tests_apis', "{$this->model}ApiTest")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} ApiTest cause {$this->model}ApiTest already exists."));
 
-        // ]);
-
-        // $testName = $this->getTestClassName();
-        // $createMessage = "Created a new Test: {$testName}";
-
-        // $this->saveClass('tests', $testName, $content);
-
-        // event(new SuccessCreateMessage($createMessage));
+            return;
+        }
+        if (!$this->classExists('controllers', "{$this->model}Controller")) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model}Controller cause {$this->model}Controller does not exists.",
+                "Create a {$this->model} Controller by himself or run command 'php artisan make:entity {$this->model} --only-controller'."
+            );
+        }
 
         $content = $this->getStub('test_repository', [
             'entity' => $this->model,
