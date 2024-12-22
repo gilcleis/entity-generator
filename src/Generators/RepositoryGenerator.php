@@ -3,27 +3,24 @@
 namespace Gilcleis\Support\Generators;
 
 use Gilcleis\Support\Events\SuccessCreateMessage;
-use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
 use Gilcleis\Support\Exceptions\ClassNotExistsException;
 
 class RepositoryGenerator extends EntityGenerator
 {
     public function generate(): void
     {
-        // if (!$this->classExists('models', $this->model)) {
-        //     $this->throwFailureException(
-        //         ClassNotExistsException::class,
-        //         "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
-        //         "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
-        //     );
-        // }
+        if (!$this->classExists('models', $this->model)) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
+                "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
+            );
+        }
 
         if ($this->classExists('repositories', "{$this->model}Repository")) {
-            $this->throwFailureException(
-                ClassAlreadyExistsException::class,
-                "Cannot create {$this->model} Repository cause {$this->model} Repository already exists.",
-                "Remove {$this->model} Repository."
-            );
+            event(new SuccessCreateMessage("Cannot create {$this->model} Repository cause {$this->model} Repository already exists."));
+
+            return;
         }
 
         $repositoryContent = $this->getStub('repository', [
@@ -51,9 +48,9 @@ class RepositoryGenerator extends EntityGenerator
             event(new SuccessCreateMessage("{$this->model}RepositoryInterface already exists"));
         } else {
             $repositoryContent = $this->getStub('contract', [
-               'entity' => $this->model,
-            'namespace' => $this->getOrCreateNamespace('contracts'),
-            'modelNamespace' => $this->getOrCreateNamespace('models')
+                'entity' => $this->model,
+                'namespace' => $this->getOrCreateNamespace('contracts'),
+                'modelNamespace' => $this->getOrCreateNamespace('models')
             ]);
 
             $this->saveClass('contracts', "{$this->model}RepositoryInterface", $repositoryContent);
