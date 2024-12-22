@@ -35,6 +35,7 @@ class ServiceGenerator extends EntityGenerator
 
             return;
         }
+        
         $stub = 'service';
         $serviceContent = $this->getStub($stub, [
             'entity' => $this->model,

@@ -32,6 +32,7 @@ class RequestsGenerator extends EntityGenerator
 
             return;
         }
+        
         $data = [];
         if (in_array('R', $this->crudOptions)) {
             // $this->createRequest(

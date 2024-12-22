@@ -11,20 +11,42 @@ class ControllerGenerator extends EntityGenerator
 {
     public function generate(): void
     {
-        // if ($this->classExists('controllers', "{$this->model}Controller")) {
-        //     $this->throwFailureException(
-        //         ClassAlreadyExistsException::class,
-        //         "Cannot create {$this->model}Controller cause {$this->model}Controller already exists.",
-        //         "Remove {$this->model}Controller.",
-        //     );
+       
+        if ($this->classExists('controllers', "{$this->model}Controller")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Controller cause {$this->model}Controller already exists."));
 
-        // }
+            return;
+        }
 
         if (!$this->classExists('services', "{$this->model}Service")) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
                 "Cannot create {$this->model}Service cause {$this->model}Service does not exists.",
-                "Create a {$this->model}Service by himself.",
+                "Create a {$this->model} Service by himself or run command 'php artisan make:entity {$this->model} --only-service'."
+            );
+        }
+
+        if (!$this->classExists('requests', "{$this->model}Request")) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model}Request cause {$this->model}Request does not exists.",
+                "Create a {$this->model} Request by himself or run command 'php artisan make:entity {$this->model} --only-requests'."
+            );
+        }
+
+        if (!$this->classExists('resources', "{$this->model}Resource")) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model}Resource cause {$this->model}Resource does not exists.",
+                "Create a {$this->model} Resource by himself or run command 'php artisan make:entity {$this->model} --only-resource'."
+            );
+        }
+
+        if (!$this->classExists('resources', "{$this->model}Collection")) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model}Collection cause {$this->model}Collection does not exists.",
+                "Create a {$this->model} Collection by himself or run command 'php artisan make:entity {$this->model} --only-resource'."
             );
         }
 
