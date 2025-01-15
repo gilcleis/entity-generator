@@ -23,7 +23,7 @@ class {{$entity}}Resource extends JsonResource
 @else
         return 
             [
-            'id' => $this->id;
+            'id' => $this->id,
 @foreach($fields as $field)
             '{{$field}}' => $this->{{$field}},
 @endforeach
