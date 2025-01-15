@@ -8,7 +8,7 @@ use Illuminate\Support\Str;
 
 class TestsGenerator extends EntityGenerator
 {
-    protected bool $withAuth = false;
+    // protected bool $withAuth = false;
     protected array $testTypes = ['repository', 'model', 'service', 'api'];
 
     // public function getTestClassName(): string
@@ -30,6 +30,7 @@ class TestsGenerator extends EntityGenerator
     {
         if ($this->classExists('tests_apis', "{$this->model}ApiTest")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} ApiTest cause {$this->model}ApiTest already exists."));
+
             return;
         }
     }
@@ -76,7 +77,7 @@ class TestsGenerator extends EntityGenerator
 
     protected function getTestFolderName(string $testType): string
     {
-        return "tests_".Str::plural($testType) ;
+        return "tests_" . Str::plural($testType);
     }
 
     protected function prepareFields(): array

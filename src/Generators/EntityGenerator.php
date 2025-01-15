@@ -5,7 +5,6 @@ namespace Gilcleis\Support\Generators;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Str;
-use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
 
 /**
  * @property Filesystem $fs
@@ -22,6 +21,7 @@ abstract class EntityGenerator
     protected $fields;
     protected $relations;
     protected $crudOptions;
+    protected $withAuth;
 
     /**
      * @param array $crudOptions
@@ -69,6 +69,17 @@ abstract class EntityGenerator
 
             $this->fields['unsignedBigInteger-required'][] = $name;
         }
+
+        return $this;
+    }
+
+    /**
+     * @param bool $withAuth
+     * @return $this
+     */
+    public function setWithAuth($withAuth)
+    {
+        $this->withAuth = $withAuth;
 
         return $this;
     }

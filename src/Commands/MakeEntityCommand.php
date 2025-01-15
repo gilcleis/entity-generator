@@ -63,6 +63,8 @@ class MakeEntityCommand extends Command
 
         {--methods=CRUD : Set types of methods to create. Affect on routes, requests classes, controller\'s methods and tests methods.} 
 
+        {--with-auth : Set this flag if you want to create entity with auth.}
+
         {--i|integer=* : Add integer field to entity.}
         {--I|integer-required=* : Add required integer field to entity. If you want to specify default value you have to do it manually.}
         {--f|float=* : Add float field to entity.}
@@ -269,6 +271,7 @@ class MakeEntityCommand extends Command
             ->setFields($this->getFields())
             ->setRelations($this->getRelations())
             ->setCrudOptions($this->getCrudOptions())
+            ->setWithAuth($this->getWithAuth())
             ->generate();
     }
 
@@ -297,6 +300,10 @@ class MakeEntityCommand extends Command
     protected function getFields()
     {
         return Arr::only($this->options(), EntityGenerator::AVAILABLE_FIELDS);
+    }
+
+    protected function getWithAuth(){
+        return $this->option('with-auth');
     }
 
     protected function validateCrudOptions()
