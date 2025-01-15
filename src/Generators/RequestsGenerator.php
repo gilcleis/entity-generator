@@ -25,14 +25,23 @@ class RequestsGenerator extends EntityGenerator
         return $this;
     }
 
-    public function generate(): void
+    public function checkRequestExists(): bool
     {
         if ($this->classExists('requests', "{$this->model}Request")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} FormRequest cause {$this->model} Request already exists."));
 
+            return true;
+        }
+
+        return false;
+    }
+
+    public function generate(): void
+    {
+        if ($this->checkRequestExists()) {
             return;
         }
-        
+
         $data = [];
         if (in_array('R', $this->crudOptions)) {
             // $this->createRequest(

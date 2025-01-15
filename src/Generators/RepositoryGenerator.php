@@ -9,17 +9,9 @@ class RepositoryGenerator extends EntityGenerator
 {
     public function generate(): void
     {
-        if (!$this->classExists('models', $this->model)) {
-            $this->throwFailureException(
-                ClassNotExistsException::class,
-                "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
-                "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
-            );
-        }
+        $this->checkModelExists();
 
-        if ($this->classExists('repositories', "{$this->model}Repository")) {
-            event(new SuccessCreateMessage("Cannot create {$this->model} Repository cause {$this->model} Repository already exists."));
-
+        if ($this->checkRepositoryExists()) {
             return;
         }
 
@@ -57,5 +49,27 @@ class RepositoryGenerator extends EntityGenerator
 
             event(new SuccessCreateMessage("Created {$this->model}RepositoryInterface"));
         }
+    }
+
+    public function checkModelExists(): void
+    {
+        if (!$this->classExists('models', $this->model)) {
+            $this->throwFailureException(
+                ClassNotExistsException::class,
+                "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
+                "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
+            );
+        }
+    }
+
+    public function checkRepositoryExists(): bool
+    {
+        if ($this->classExists('repositories', "{$this->model}Repository")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Repository cause {$this->model} Repository already exists."));
+
+            return true;
+        }
+
+        return false;
     }
 }

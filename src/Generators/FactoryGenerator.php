@@ -26,22 +26,37 @@ class FactoryGenerator extends EntityGenerator
         'json' => '[]',
     ];
 
-    protected function generateSeparateClass(): string
+    public function checkModelExists(): void
     {
         if (!$this->classExists('models', $this->model)) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
-                "Cannot create {$this->model}Factory cause {$this->model} Model does not exists.",
+                "Cannot create {$this->model} Model cause {$this->model} Model does not exists.",
                 "Create a {$this->model} Model by himself or run command 'php artisan make:entity {$this->model} --only-model'."
             );
         }
+    }
 
+    public function checkFactoryExists(): bool
+    {
         if ($this->classExists('factory', "{$this->model}Factory")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} Factory cause {$this->model}Factory already exists."));
 
+            return true;
+        }
+
+        return false;
+    }
+
+    protected function generateSeparateClass(): string
+    {
+        $this->checkModelExists();
+
+        if ($this->checkFactoryExists()) {
             return '';
         }
 
+  
         $factoryContent = $this->getStub('factory', [
             'namespace' => $this->getOrCreateNamespace('factory'),
             'entity' => $this->model,

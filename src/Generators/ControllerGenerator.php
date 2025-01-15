@@ -2,16 +2,14 @@
 
 namespace Gilcleis\Support\Generators;
 
-use Illuminate\Contracts\Filesystem\FileNotFoundException;
-use Gilcleis\Support\Exceptions\ClassAlreadyExistsException;
-use Gilcleis\Support\Exceptions\ClassNotExistsException;
 use Gilcleis\Support\Events\SuccessCreateMessage;
+use Gilcleis\Support\Exceptions\ClassNotExistsException;
+use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ControllerGenerator extends EntityGenerator
 {
     public function generate(): void
     {
-       
         if ($this->classExists('controllers', "{$this->model}Controller")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} Controller cause {$this->model}Controller already exists."));
 
@@ -54,7 +52,7 @@ class ControllerGenerator extends EntityGenerator
 
         $this->saveClass('controllers', "{$this->model}Controller", $controllerContent);
 
-        //$this->createRoutes();
+        // $this->createRoutes();
 
         event(new SuccessCreateMessage("Created a new Controller: {$this->model}Controller"));
     }
@@ -91,6 +89,7 @@ class ControllerGenerator extends EntityGenerator
     {
         $routesContent = $this->getStub('routes', [
             'entity' => $this->model,
+            'withAuth' => $this->withAuth,
             'entities' => $this->getTableName($this->model, '-'),
         ]);
 

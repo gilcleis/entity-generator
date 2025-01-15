@@ -13,13 +13,33 @@ class ResourceGenerator extends EntityGenerator
         $this->generateCollectionResource();
     }
 
+    public function checkCollectionExists(): bool
+    {
+        if ($this->classExists('resources', "{$this->model}Collection")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Collection cause {$this->model}Collection already exists."));
+
+            return true;
+        }
+
+        return false;
+    }
+
+    public function checkResourceExists(): bool
+    {
+        if ($this->classExists('resources', "{$this->model}Resource")) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Resource cause {$this->model}Resource already exists."));
+
+            return true;
+        }
+
+        return false;
+    }
+
     public function generateCollectionResource(): void
     {
         $pluralName = $this->getPluralName($this->model);
 
-        if ($this->classExists('resources', "{$this->model}Collection")) {
-            event(new SuccessCreateMessage("Cannot create {$this->model} Collection cause {$this->model}Collection already exists."));
-
+        if ($this->checkCollectionExists()) {
             return;
         }
 
@@ -36,9 +56,7 @@ class ResourceGenerator extends EntityGenerator
 
     public function generateResource(): void
     {
-        if ($this->classExists('resources', "{$this->model}Resource")) {
-            event(new SuccessCreateMessage("Cannot create {$this->model} Resource cause {$this->model}Resource already exists."));
-
+        if ($this->checkResourceExists()) {
             return;
         }
 

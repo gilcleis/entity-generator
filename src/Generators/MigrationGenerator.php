@@ -24,7 +24,7 @@ class MigrationGenerator extends EntityGenerator
 
         $this->saveClass('migrations', "{$now}_{$entities}_create_table", $content);
 
-        event(new SuccessCreateMessage("Created a new Migration: {$entities}_create_table"));
+        event(new SuccessCreateMessage("Created a new Migration: {$now}_{$entities}_create_table"));
     }
 
     protected function isJson($typeName): bool

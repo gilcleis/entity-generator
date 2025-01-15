@@ -20,7 +20,7 @@ class ServiceGenerator extends EntityGenerator
         return $this;
     }
 
-    public function generate(): void
+    public function checkRepositoryExists(): void
     {
         if (!$this->classExists('repositories', "{$this->model}Repository")) {
             $this->throwFailureException(
@@ -29,10 +29,24 @@ class ServiceGenerator extends EntityGenerator
                 "Create a {$this->model} Repository by himself or run command 'php artisan make:entity {$this->model} --only-repository'."
             );
         }
+    }
 
+    public function checkServiceExists(): bool
+    {
         if ($this->classExists('services', "{$this->model}Service")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} Service cause {$this->model} Service already exists."));
 
+            return true;
+        }
+
+        return false;
+    }
+
+    public function generate(): void
+    {
+        $this->checkRepositoryExists();
+        
+        if($this->checkServiceExists()){
             return;
         }
         

@@ -14,15 +14,10 @@ class ModelGenerator extends EntityGenerator
         'hasMany'
     ];
 
+
     public function generate(): void
     {
-        if ($this->classExists('models', $this->model)) {
-            event(
-                new SuccessCreateMessage(
-                    "Cannot create {$this->model} Model cause {$this->model} Model already exists."
-                )
-            );
-
+        if($this->checkModelExists()){
             return;
         }
 
@@ -44,6 +39,17 @@ class ModelGenerator extends EntityGenerator
 
             event(new SuccessCreateMessage("Created BaseRepository"));
         }
+    }
+
+    protected function checkModelExists(): bool
+    {
+        if ($this->classExists('models', $this->model)) {
+            event(new SuccessCreateMessage("Cannot create {$this->model} Model cause {$this->model} Model already exists. "));
+
+            return true;
+        }
+
+        return false;
     }
 
     protected function getNewModelContent(): string
