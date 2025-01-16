@@ -12,7 +12,7 @@ class RepositoryGenerator extends EntityGenerator
         $this->checkModelExists();
 
         if ($this->checkRepositoryExists()) {
-            return;
+           // return;
         }
 
         $repositoryContent = $this->getStub('repository', [
@@ -32,6 +32,18 @@ class RepositoryGenerator extends EntityGenerator
             ]);
 
             $this->saveClass('base_repository', "BaseRepository", $repositoryContent);
+
+            event(new SuccessCreateMessage("Created BaseRepository"));
+        }
+
+        if ($this->classExists('repositories', 'SearchBaseRepository')) {
+            event(new SuccessCreateMessage("SearchBaseRepository already exists"));
+        } else {
+            $repositoryContent = $this->getStub('base_repository', [
+                'namespace' => $this->getOrCreateNamespace('repositories'),
+            ]);
+
+            $this->saveClass('base_repository', "SearchBaseRepository", $repositoryContent);
 
             event(new SuccessCreateMessage("Created BaseRepository"));
         }
