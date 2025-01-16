@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Database\Eloquent\Builder as Query;
 use Gilcleis\Support\Exceptions\InvalidModelException;
 
-class BaseRepository
+class BaseRepository extends SearchBaseRepository
 {
     protected $model;
     protected $fields;

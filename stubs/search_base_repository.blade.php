@@ -79,7 +79,7 @@ class SearchBaseRepository
         return $this;
     }
 
-    public function filterByQuery(array $fields, string $mask = "'%{{ value }}%'"): self
+    public function filterByQuery(array $fields, string $mask = "'%@{{ value }}%'"): self
     {
         if (!empty($this->filter['query'])) {
             $this->query->where(function ($query) use ($fields, $mask) {
@@ -282,7 +282,7 @@ class SearchBaseRepository
             $value = ($databaseDriver === 'pgsql')
                 ? pg_escape_string($this->filter['query'])
                 : addslashes($this->filter['query']);
-            $value = str_replace('{{ value }}', $value, $mask);
+            $value = str_replace('@{{ value }}', $value, $mask);
             $operator = ($databaseDriver === 'pgsql')
                 ? 'ilike'
                 : 'like';
