@@ -35,7 +35,7 @@ class {{$entity}}Request extends FormRequest
 @endif
 @endforeach
     }
-@foreach($data as $d)      @if(in_array($d['method'], ['Update', 'Create','Get'])) 
+@foreach($data as $d)      @if(in_array($d['method'], ['Update', 'Create','Get','Search'])) 
     public function rules{{$d['method']}}(): array
     {
         return [

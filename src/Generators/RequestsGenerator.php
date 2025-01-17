@@ -50,7 +50,7 @@ class RequestsGenerator extends EntityGenerator
             //     $this->getGetValidationParameters()
             // );
             $data[] = ['method' => self::GET_METHOD, 'needToValidate' => true, 'parameters' => $this->getGetValidationParameters()];
-            //$data[] = ['method' => self::SEARCH_METHOD, 'needToValidate' => false, 'parameters' => $this->getSearchValidationParameters()];
+            $data[] = ['method' => self::SEARCH_METHOD, 'needToValidate' => false, 'parameters' => $this->getSearchValidationParameters()];
         }
 
         if (in_array('D', $this->crudOptions)) {
@@ -89,7 +89,7 @@ class RequestsGenerator extends EntityGenerator
             $content
         );
 
-        event(new SuccessCreateMessage("Created a new Request: {$method}{$modelName}Request"));
+        event(new SuccessCreateMessage("Created a new Request: {$modelName}Request"));
     }
 
     protected function getGetValidationParameters(): array
@@ -126,11 +126,12 @@ class RequestsGenerator extends EntityGenerator
     protected function getSearchValidationParameters(): array
     {
         $parameters = Arr::except($this->fields, [
-            'timestamp', 'timestamp-required', 'boolean-required',
+            'timestamp', 'timestamp-required',
+            //'boolean-required',
             // 'string-required', 'integer-required',
         ]);
 
-        $parameters['boolean'] = array_merge($this->fields['boolean-required'], ['desc']);
+        $parameters['boolean-required'] = array_merge($this->fields['boolean-required'], ['desc']);
 
         $parameters['integer'] = array_merge($this->fields['integer'], [
             'page', 'per_page', 'all',
