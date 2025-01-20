@@ -8,14 +8,41 @@ use Illuminate\Contracts\Filesystem\FileNotFoundException;
 
 class ControllerGenerator extends EntityGenerator
 {
+    
+
     public function generate(): void
+    {
+        if ($this->checkControllerExists()) {
+            return;
+        }
+
+        $this->checkServiceExists();
+        $this->checkRequestExists();
+        $this->checkResourceExists();
+        $this->checkCollectionExists();
+
+        $controllerContent = $this->getControllerContent($this->model);
+
+        $this->saveClass('controllers', "{$this->model}Controller", $controllerContent);
+
+        $this->createRoutes();
+
+        event(new SuccessCreateMessage("Created a new Controller: {$this->model}Controller"));
+    }
+
+    protected function checkControllerExists(): bool
     {
         if ($this->classExists('controllers', "{$this->model}Controller")) {
             event(new SuccessCreateMessage("Cannot create {$this->model} Controller cause {$this->model}Controller already exists."));
 
-            return;
+            return true;
         }
 
+        return false;
+    }
+
+    protected function checkServiceExists(): void
+    {
         if (!$this->classExists('services', "{$this->model}Service")) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
@@ -23,7 +50,10 @@ class ControllerGenerator extends EntityGenerator
                 "Create a {$this->model} Service by himself or run command 'php artisan make:entity {$this->model} --only-service'."
             );
         }
+    }
 
+    protected function checkRequestExists(): void
+    {
         if (!$this->classExists('requests', "{$this->model}Request")) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
@@ -31,7 +61,10 @@ class ControllerGenerator extends EntityGenerator
                 "Create a {$this->model} Request by himself or run command 'php artisan make:entity {$this->model} --only-requests'."
             );
         }
+    }
 
+    protected function checkResourceExists(): void
+    {
         if (!$this->classExists('resources', "{$this->model}Resource")) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
@@ -39,7 +72,10 @@ class ControllerGenerator extends EntityGenerator
                 "Create a {$this->model} Resource by himself or run command 'php artisan make:entity {$this->model} --only-resource'."
             );
         }
+    }
 
+    protected function checkCollectionExists(): void
+    {
         if (!$this->classExists('resources', "{$this->model}Collection")) {
             $this->throwFailureException(
                 ClassNotExistsException::class,
@@ -47,14 +83,6 @@ class ControllerGenerator extends EntityGenerator
                 "Create a {$this->model} Collection by himself or run command 'php artisan make:entity {$this->model} --only-resource'."
             );
         }
-
-        $controllerContent = $this->getControllerContent($this->model);
-
-        $this->saveClass('controllers', "{$this->model}Controller", $controllerContent);
-
-        // $this->createRoutes();
-
-        event(new SuccessCreateMessage("Created a new Controller: {$this->model}Controller"));
     }
 
     protected function getControllerContent($model): string

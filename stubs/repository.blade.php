@@ -18,8 +18,9 @@ PHPDOC;
 @endphp
 class {{$entity}}Repository extends BaseRepository implements Contracts\{{$entity}}RepositoryInterface
 {
-    public function __construct()
+    public function __construct(private {{$entity}} $entity)
     {
-        parent::__construct({{$entity}}::class);
+        $this->entity = $entity;
+        parent::__construct($entity);
     }
 }

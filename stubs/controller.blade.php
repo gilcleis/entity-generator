@@ -64,6 +64,19 @@ class {{$entity}}Controller extends Controller
         return response()->json(new {{$entity}}Collection($result), Response::HTTP_OK);
     }    
 
+    /**
+     * Search for posts based on the validated request data.
+     *
+     * @param \App\Http\Requests\PostRequest $request The validated request data.
+     * @return \Illuminate\Http\Resources\Json\JsonResource The collection of post resources.
+     */
+    public function search(PostRequest $request): \Illuminate\Http\Resources\Json\JsonResource
+    {
+        $result = $this->service->search($request->validated());
+
+        return {{$entity}}Collection::make($result);
+    }
+
 {{--    public function search(Search{{$str::plural($entity)}}Request $request)
     {
         $result = $this->service->search($request->validated());

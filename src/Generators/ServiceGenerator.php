@@ -9,15 +9,50 @@ use Illuminate\Support\Str;
 
 class ServiceGenerator extends EntityGenerator
 {
-    public function setRelations($relations)
-    {
-        foreach ($relations['belongsTo'] as $field) {
-            $name = Str::snake($field) . '_id';
+    // public function setRelations($relations)
+    // {
+    //     foreach ($relations['belongsTo'] as $field) {
+    //         $name = Str::snake($field) . '_id';
 
-            $this->fields['integer'][] = $name;
+    //         $this->fields['integer'][] = $name;
+    //     }
+
+    //     return $this;
+    // }
+
+    public const PLURAL_NUMBER_REQUIRED = [
+        'belongsToMany',
+        'hasMany'
+    ];
+
+    public function prepareRelations(): array
+    {
+        $result = [];
+
+        foreach ($this->relations as $type => $relations) {
+            foreach ($relations as $relation) {
+                if (!empty($relation) && $type == 'belongsTo') {
+                    $result[] = [
+                        'name' => $this->getRelationName($relation, $type),
+                        'type' => $type,
+                        'entity' => $relation
+                    ];
+                }
+            }
         }
 
-        return $this;
+        return $result;
+    }
+
+    private function getRelationName($relation, $type): string
+    {
+        $relationName = Str::snake($relation);
+
+        if (in_array($type, self::PLURAL_NUMBER_REQUIRED)) {
+            $relationName = Str::plural($relationName);
+        }
+
+        return $relationName;
     }
 
     public function checkRepositoryExists(): void
@@ -45,18 +80,21 @@ class ServiceGenerator extends EntityGenerator
     public function generate(): void
     {
         $this->checkRepositoryExists();
-        
-        if($this->checkServiceExists()){
+
+        if ($this->checkServiceExists()) {
             return;
         }
-        
+
         $stub = 'service';
+        $fields = Arr::collapse($this->fields);
+
         $serviceContent = $this->getStub($stub, [
             'entity' => $this->model,
             'fields' => $this->getFields(),
             'namespace' => $this->getOrCreateNamespace('services'),
             'repositoriesNamespace' => $this->getOrCreateNamespace('repositories'),
-            'modelsNamespace' => $this->getOrCreateNamespace('models')
+            'modelsNamespace' => $this->getOrCreateNamespace('models'),
+            'relations' => $this->prepareRelations(),
         ]);
 
         $this->saveClass('services', "{$this->model}Service", $serviceContent);
@@ -66,7 +104,7 @@ class ServiceGenerator extends EntityGenerator
 
     protected function getFields(): array
     {
-        $simpleSearch = Arr::only($this->fields, ['integer', 'integer-required', 'boolean', 'boolean-required']);
+        $simpleSearch = Arr::only($this->fields, ['integer', 'integer-required', 'boolean', 'boolean-required','unsignedBigInteger-required']);
 
         return [
             'simple_search' => Arr::collapse($simpleSearch),

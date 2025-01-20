@@ -40,7 +40,7 @@ function addForeignKey($relation)
 {        
     $field = Str::snake($relation);
 return "
-        if(isset($this->resource->getRelations()['user'])){
+        if(isset(\$this->resource->getRelations()['user'])){
             \$data['{$field}'] = ['id' => \$this->{$field}->id,'name' => \$this->{$field}->name];
         }
 ";

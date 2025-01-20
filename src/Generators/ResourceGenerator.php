@@ -49,15 +49,15 @@ class ResourceGenerator extends EntityGenerator
             'namespace' => $this->getOrCreateNamespace('resources')
         ]);
 
-        $this->saveClass('resources', "{$pluralName}CollectionResource", $collectionResourceContent);
+        $this->saveClass('resources', "{$this->model}Collection", $collectionResourceContent);
 
-        event(new SuccessCreateMessage("Created a new CollectionResource: {$pluralName}CollectionResource"));
+        event(new SuccessCreateMessage("Created a new Collection: {$this->model}Collection"));
     }
 
     public function generateResource(): void
     {
         if ($this->checkResourceExists()) {
-            return;
+            // return;
         }
 
         $resourceContent = $this->getStub('resource', [

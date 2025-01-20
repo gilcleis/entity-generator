@@ -42,7 +42,8 @@ class {{$entity}}Request extends FormRequest
     @foreach($d['parameters'] as $parameter)
         '{{$parameter['name']}}' => '{{implode('|', $parameter['rules'])}}',
     @endforeach
-    ];          
+
+        ];          
     }
     @endif
 @endforeach
@@ -78,6 +79,14 @@ class {{$entity}}Request extends FormRequest
             throw new HttpResponseException($response);
         }    
     }@endif   
+
+    @php  
+    function getBelongsTo($relations) {
+        return collect($relations)->get('belongsTo', []);
+    }
+    @endphp
+
+
 }
 
 

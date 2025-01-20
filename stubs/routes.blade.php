@@ -25,7 +25,7 @@
     @endif
     @if (in_array('R', $options))
     Route::get('{{$entities}}/{id}', [{{$entity}}Controller::class, 'show'])->name('{{$entities}}.show');
-    Route::get('{{$entities}}', [{{$entity}}Controller::class, 'index'])->name('{{$entities}}.index');
+    //Route::get('{{$entities}}', [{{$entity}}Controller::class, 'index'])->name('{{$entities}}.index');
     Route::get('{{$entities}}', [{{$entity}}Controller::class, 'search'])->name('{{$entities}}.search');
     @endif
 @endif

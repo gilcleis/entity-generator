@@ -4,6 +4,7 @@ use App\Repositories\Contracts\{{$entity}}RepositoryInterface;
 use {{$repositoriesNamespace}}\{{$entity}}Repository;
 use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Arr;
 {{--
     Laravel inserts two spaces between @property and type, so we are forced
     to use hack here to preserve one space
@@ -128,6 +129,42 @@ class {{$entity}}Service
     public function withCount($relation)
     {
         return $this->repository->withCount($relation);
+    }
+
+    private function processFilters(array $filters): array
+    {
+        $data = [];
+        foreach ($filters as $key => $value) {
+            if (is_array($value) && in_array($key, [@foreach($relations as $relation)'{{$relation['name']}}',@endforeach])) {
+                foreach ($value as $subKey => $subValue) {
+                    $data["{$key}.{$subKey}"] = $subValue;
+                    unset($filters[$key][$subKey]);
+                    unset($filters[$key]);
+                }
+            }
+        }
+
+        return array_merge($filters, $data);
+    }
+    @php
+        $search_by_query = collect($fields)->get('search_by_query', []);
+        $formattedText = "'" . implode("','", $search_by_query) . "'";
+
+        $simple_search = collect($fields)->get('simple_search', []);
+    @endphp
+    public function search($filters)
+    {
+        $filters = $this->processFilters($filters);
+
+        return $this
+            ->repository->with(Arr::get($filters, 'with', []))
+            //->withCount(Arr::get($filters, 'with_count', []))
+            ->searchQuery($filters)
+@foreach ($simple_search as $value)
+            // ->filterBy('{{$value}}')
+@endforeach
+            ->filterByQuery([{!! $formattedText !!}])
+            ->getSearchResults();
     }
 @endif
 }

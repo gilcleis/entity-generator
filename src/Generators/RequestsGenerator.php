@@ -39,7 +39,7 @@ class RequestsGenerator extends EntityGenerator
     public function generate(): void
     {
         if ($this->checkRequestExists()) {
-            return;
+            // return;
         }
 
         $data = [];
@@ -49,8 +49,8 @@ class RequestsGenerator extends EntityGenerator
             //     true,
             //     $this->getGetValidationParameters()
             // );
-            $data[] = ['method' => self::GET_METHOD, 'needToValidate' => true, 'parameters' => $this->getGetValidationParameters()];
-            $data[] = ['method' => self::SEARCH_METHOD, 'needToValidate' => false, 'parameters' => $this->getSearchValidationParameters()];
+            // $data[] = ['method' => self::GET_METHOD, 'needToValidate' => true, 'parameters' => $this->getGetValidationParameters()];
+            $data[] = ['method' => self::GET_METHOD, 'needToValidate' => false, 'parameters' => $this->getSearchValidationParameters()];
         }
 
         if (in_array('D', $this->crudOptions)) {
@@ -80,7 +80,8 @@ class RequestsGenerator extends EntityGenerator
             'needToValidate' => true,
             // 'requestsFolder' => $requestsFolder,
             'namespace' => $this->getOrCreateNamespace('requests'),
-            'servicesNamespace' => $this->getOrCreateNamespace('services')
+            'servicesNamespace' => $this->getOrCreateNamespace('services'),
+            'relations' => $this->relations,
         ]);
 
         $this->saveClass(
